@@ -22,42 +22,55 @@ var storage = multer.diskStorage({
 });
 var upload = multer({ storage: storage }).single('myfile');
 
-app.use(function checkHeader(req, res, next) {
+app.use(function checkAuth(req, res, next) {
     if (req.headers['x-fcstore-secret'] !== X_FCSTORE_SECRET) {
-        return res.status(401).json({ status: 'error', reason: 'unauthorized' });
+        return res
+            .status(401)
+            .json({ status: 'error', reason: 'unauthorized' });
     }
     next();
 });
 
 app.get('/', function(req, res) {
-    fs.readdir(UPLOADS_DIR, function (err, dirContent) {
+    fs.readdir(UPLOADS_DIR, function(err, dirContent) {
         if (err) {
             console.error('error reading buckets list', err);
-            return res.status(500).json({ status: 'error', reason: err.message });
+            return res
+                .status(500)
+                .json({ status: 'error', reason: err.message });
         }
         res.json(dirContent);
     });
 });
 
-app.get('/:bucket', function (req, res) {
-    fs.readdir(UPLOADS_DIR + '/' + req.params.bucket, function (err, dirContent) {
+app.get('/:bucket', function(req, res) {
+    fs.readdir(UPLOADS_DIR + '/' + req.params.bucket, function(
+        err,
+        dirContent
+    ) {
         if (err) {
             console.error('error reading bucket ' + req.params.bucket, err);
-            return res.status(500).json({ status: 'error', reason: err.message });
+            return res
+                .status(500)
+                .json({ status: 'error', reason: err.message });
         }
         res.json(dirContent);
     });
 });
 
-app.get('/:bucket/:file', function (req, res) {
-    fs.createReadStream(pathlib.resolve(UPLOADS_DIR, req.params.bucket, req.params.file)).pipe(res);
+app.get('/:bucket/:file', function(req, res) {
+    fs.createReadStream(
+        pathlib.resolve(UPLOADS_DIR, req.params.bucket, req.params.file)
+    ).pipe(res);
 });
 
 app.post('/:bucket', function(req, res) {
     upload(req, res, function(err) {
         if (err) {
             console.error('upload failed', err);
-            return res.status(500).json({ status: 'error', reason: err.message });
+            return res
+                .status(500)
+                .json({ status: 'error', reason: err.message });
         }
         res.json({ status: 'success' });
     });
@@ -65,4 +78,19 @@ app.post('/:bucket', function(req, res) {
 
 app.listen(PORT, function() {
     console.log('Server is running on port ' + PORT);
+});
+
+fs.exists(UPLOADS_DIR, function(exists) {
+    if (!exists) {
+        fs.mkdir(UPLOADS_DIR, function(err) {
+            if (err) {
+                console.error(
+                    'creating uploads dir failed ' + UPLOADS_DIR,
+                    err
+                );
+            } else {
+                console.log('uploads dir created');
+            }
+        });
+    }
 });
