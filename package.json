@@ -1,0 +1,23 @@
+{
+  "name": "fcstore",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "github.com/finalclass/fcstore"
+  },
+  "keywords": [
+    "files",
+    "store"
+  ],
+  "author": "Szymon Wygnański",
+  "license": "MIT",
+  "dependencies": {
+    "express": "^4.17.1",
+    "multer": "^1.4.2"
+  }
+}
