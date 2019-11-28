@@ -43,18 +43,45 @@ app.get('/', function(req, res) {
     });
 });
 
+function readBucket(dir, done) {
+    fs.readdir(dir, function (err, dirContent) {
+        if (err) {
+            return done(err);
+        }
+
+        var result = [];
+        
+        function readStat() {
+            var file = dirContent.pop();
+            if (!file) {
+                return done(null, result);
+            }
+            fs.stat(pathlib.join(dir, file), function (err, stats) {
+                if (err) {
+                    console.error('reading file stat failed file: ' + dir + '/' + file, err);
+                    return done(err);
+                }
+                result.push({
+                    name: file,
+                    lastModified: Math.round(stats.mtimeMs)
+                });
+                readStat();
+            });
+        }
+        
+        readStat();
+    });
+}
+
 app.get('/:bucket', function(req, res) {
-    fs.readdir(UPLOADS_DIR + '/' + req.params.bucket, function(
-        err,
-        dirContent
-    ) {
+    readBucket(pathlib.join(UPLOADS_DIR, req.params.bucket), function (err, bucketContent) {
         if (err) {
             console.error('error reading bucket ' + req.params.bucket, err);
             return res
                 .status(500)
                 .json({ status: 'error', reason: err.message });
         }
-        res.json(dirContent);
+        res.json(bucketContent);        
     });
 });
 
