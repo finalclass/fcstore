@@ -90,7 +90,7 @@ function readBucket(dir, done) {
                     console.log('STATS', stats);
                     result.push({
                         name: file,
-                        lastModified: Math.round(stats.mtimeMs)
+                        lastModified: new Date(stats.mtime)
                     });
                     readStat();
                 });
@@ -137,7 +137,7 @@ app.get('/:bucket/:file', function(req, res) {
             console.log(req.method + ' ' + req.path + ' success');
             res.json({
                 name: req.params.file,
-                lastModified: Math.round(stat.mtimeMs),
+                lastModified: new Date(stat.mtime).getTime(),
                 content: buff.toString('base64')
             });
         });
