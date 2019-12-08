@@ -5,7 +5,9 @@
     "main": "index.js",
     "scripts": {
         "test": "echo \"Error: no test specified\" && exit 1",
-        "start": "node index.js"
+        "start": "node index.js",
+        "archive": "git archive --format zip -o fcstore.zip HEAD"
+        "deploy": "scp fcstore.zip fc:/home/sel/www/fcstore/ && ssh fc 'cd /home/sel/www/fcstore && unzip fcstore.zip'"
     },
     "repository": {
         "type": "git",

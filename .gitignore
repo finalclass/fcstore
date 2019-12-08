@@ -1,4 +1,5 @@
-./uploads
+/uploads
+/fcstore.zip
 # Logs
 logs
 *.log
