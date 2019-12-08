@@ -62,6 +62,7 @@ app.get('/', function(req, res) {
 });
 
 function readBucket(dir, done) {
+    console.log('SSSSS');
     fs.exists(dir, function (exists) {
         if (!exists) {
             return done(null, []);
@@ -80,11 +81,13 @@ function readBucket(dir, done) {
                         return b.lastModified - a.lastModified;
                     }));
                 }
+                console.log('HERE');
                 fs.stat(pathlib.join(dir, file), function (err, stats) {
                     if (err) {
                         console.error('reading file stat failed file: ' + dir + '/' + file, err);
                         return done(err);
                     }
+                    console.log('STATS', stats);
                     result.push({
                         name: file,
                         lastModified: Math.round(stats.mtimeMs)
