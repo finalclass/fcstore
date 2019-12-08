@@ -90,7 +90,7 @@ function readBucket(dir, done) {
                     console.log('STATS', stats);
                     result.push({
                         name: file,
-                        lastModified: new Date(stats.mtime)
+                        lastModified: new Date(stats.mtime).getTime()
                     });
                     readStat();
                 });
