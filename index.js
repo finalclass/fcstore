@@ -161,6 +161,13 @@ app.listen(PORT, function() {
     console.log('Server is running on port ' + PORT);
 });
 
+
+app.get('/hello', function (req, res) {
+    res.json({
+        message: 'Hello World'
+    });
+});
+
 fs.exists(UPLOADS_DIR, function(exists) {
     if (!exists) {
         fs.mkdir(UPLOADS_DIR, function(err) {
